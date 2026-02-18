@@ -1,28 +1,18 @@
-
 import math
-
 
 class IPC7351Engine:
     def __init__(self):
-        # p is "placement tolerance" and is defined by Fab House's assembly equipment
+        # F is "fabrication tolerance". It's found in tables 3-17 and 3-18
+        # P is "placement tolerance" and is defined by Fab House's assembly equipment
+        
         self.defaults = {
-            "Greatest_board_x_y_dim_up_to_300mm": {
-                "A": {"F": 0.3, "P": 0.10},  # Preferred/General
-                "B": {"F": 0.2, "P": 0.10},  # Nominal
-                "C": {"F": 0.1, "P": 0.10}   # Reduced/Precision
-            },
-            "Greatest_board_x_y_dim_up_to_450mm": {
-                "A": {"F": 0.35, "P": 0.10},  # Preferred/General
-                "B": {"F": 0.25, "P": 0.10},  # Nominal
-                "C": {"F": 0.15, "P": 0.10}   # Reduced/Precision
-            },
-            "Greatest_board_x_y_dim_up_to_600mm": {
-                "A": {"F": 0.4, "P": 0.10},  # Preferred/General
-                "B": {"F": 0.3, "P": 0.10},  # Nominal
-                "C": {"F": 0.2, "P": 0.10}   # Reduced/Precision
-            }
+            "A": {"F": 0.0, "P": 0.0},  
+            "B": {"F": 0.0, "P": 0.0},  
+            "C": {"F": 0.0, "P": 0.0} 
         }
 
+        # According to Tom Hausherr F and P should be marked as 0 per IPC-7352!!!
+        # https://www.pcblibraries.com/forum/ipc7351-and-smd-pad-shapes_topic2590.html
         # Fillet Tables (jt: Toe, jh: Heel, js: Side)
         self.fillet_tables = {
             "Gull-wing": {
@@ -41,14 +31,16 @@ class IPC7351Engine:
         """Round UP to nearest 0.01mm as requested by the user."""
         return self._round_up(val, 0.01)
 
-    def calculate_land_pattern(self, l_min, l_max, w_min, w_max, t_min, t_max, family, level_full, board_dim_mm):
+    def calculate_land_pattern(
+        self, l_min, l_max, w_min, w_max, t_min, t_max, family, level_full
+    ):
         # Extract Level Letter (A, B, C)
         level = level_full[0] if level_full else "B"
         
         f_table = self.fillet_tables[family][level]
-        defaults = self.defaults[board_dim_mm][level]
+        defaults = self.defaults[level]
 
-        print(f"DEBUG: Level={level}, BoardDim={board_dim_mm}")
+        print(f"DEBUG: Level={level}")
         print(f"DEBUG: Defaults={defaults}")
         
         F = defaults["F"]

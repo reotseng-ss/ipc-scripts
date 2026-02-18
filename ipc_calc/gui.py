@@ -56,24 +56,11 @@ class IPCHomeGUI:
         self.level.set("A (Maximum Protrusion)")
         self.level.grid(row=1, column=1, padx=5, pady=5)
 
-        ttk.Label(config_frame, text="Board Size:").grid(row=2, column=0, sticky="W")
-        self.board_dim = ttk.Combobox(
-            config_frame, 
-            values=[
-                "Greatest_board_x_y_dim_up_to_300mm", 
-                "Greatest_board_x_y_dim_up_to_450mm", 
-                "Greatest_board_x_y_dim_up_to_600mm"
-            ], 
-            width=30
-        )
-        self.board_dim.set("Greatest_board_x_y_dim_up_to_300mm")
-        self.board_dim.grid(row=2, column=1, padx=5, pady=5)
-
         # Dimensions Section
         dim_frame = ttk.LabelFrame(parent, text=" Component Dimensions (mm) ", padding="10")
         dim_frame.grid(row=2, column=0, columnspan=2, sticky="EW", pady=10)
 
-        self.dim_labels = ["L Min", "L Max", "W Min", "W Max", "T Min", "T Max"]
+        self.dim_labels = ["L Min", "L Max", "W Min", "W Max", "T (Lead) Min", "T (Lead) Max"]
         self.entries = {}
         for i, label in enumerate(self.dim_labels):
             row, col = divmod(i, 2)
@@ -137,7 +124,6 @@ class IPCHomeGUI:
         try:
             pkg = self.pkg_type.get()
             lvl = self.level.get()
-            board_dim = self.board_dim.get()
             
             if pkg == "BGA":
                 ball_text = self.entries["L Min"].get()
@@ -156,7 +142,7 @@ class IPCHomeGUI:
                          return
                     vals.append(float(val_text))
                 
-                res = self.engine.calculate_land_pattern(*vals, pkg, lvl, board_dim)
+                res = self.engine.calculate_land_pattern(*vals, pkg, lvl)
                 output = (f"Land Pattern Dimensions:\n"
                           f"  Z (Outer): {res['Z']:.2f} mm\n"
                           f"  G (Inner): {res['G']:.2f} mm\n"
