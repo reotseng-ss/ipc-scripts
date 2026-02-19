@@ -18,7 +18,7 @@ class IPC7351Engine:
             "Gull-wing": {
                 "A": {"jt": 0.55, "jh": 0.45, "js": 0.05, "excess": 0.50},
                 "B": {"jt": 0.35, "jh": 0.35, "js": 0.03, "excess": 0.25},
-                "C": {"jt": 0.15, "jh": 0.25, "js": 0.00, "excess": 0.10}
+                "C": {"jt": 0.15, "jh": 0.25, "js": 0.01, "excess": 0.10}
             }
         }
 
@@ -28,7 +28,7 @@ class IPC7351Engine:
         return math.ceil(round(val / step, 6)) * step
 
     def _courtyard_round(self, val):
-        """Round UP to nearest 0.01mm as requested by the user."""
+        """Round UP to nearest 0.01mm."""
         return self._round_up(val, 0.01)
 
     def calculate_land_pattern(
@@ -60,11 +60,12 @@ class IPC7351Engine:
         jh = f_table['jh']
         if family == "Gull-wing":
              if s_min <= a_max and t1 <= 0.5:
+                 print(f"OVERRIDING JH for {level}")
                  overrides = {"A": 0.25, "B": 0.15, "C": 0.05}
                  jh = overrides[level]
 
         # Statistical RMS calculation
-        s_tol_rms = math.sqrt(c_l**2 + 2 * c_t**2)
+        s_tol_rms = math.sqrt(c_l**2 + (2 * c_t**2))
         s_max_rms = s_min + s_tol_rms
         
         # Z, G, X Formulas
@@ -73,15 +74,22 @@ class IPC7351Engine:
         raw_x = w_min + (2 * f_table['js']) + math.sqrt(c_w**2 + F**2 + P**2)
         
         # Feature Rounding
-        # Toe (Z) & Heel (G): Nearest 0.20
+        # Toe (Z) & Heel (G): Nearest two place even decimal (0.20)
         z = self._round_up(raw_z, 0.20)
         g = self._round_up(raw_g, 0.20)
+        
         # Side (X): Nearest 0.05
         x = self._round_up(raw_x, 0.05)
         
         # Courtyard
         raw_cl = max(z, l_max) + (2 * excess)
         raw_cw = max(x, w_max) + (2 * excess)
+        
+        print(f"raw Z: {raw_z}, rounded: {z}")
+        print(f"raw G: {raw_g}, rounded: {g}")
+        print(f"raw X: {raw_x}, rounded: {x}")
+        print(f"raw CL: {raw_cl}, rounded: {self._courtyard_round(raw_cl)}")
+        print(f"raw CW: {raw_cw}, rounded: {self._courtyard_round(raw_cw)}")
         
         return {
             "Z": round(z, 2),

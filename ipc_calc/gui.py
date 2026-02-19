@@ -100,8 +100,8 @@ class IPCHomeGUI:
             ttk.Label(input_frame, text=text + ":").grid(row=i, column=0, sticky="W", padx=5, pady=2)
             entry = ttk.Entry(input_frame, width=15)
             # Set some defaults
-            if key == "fab_f": entry.insert(0, "0.04") # IPC Class B approx
-            if key == "place_p": entry.insert(0, "0.10") 
+            if key == "fab_f": entry.insert(0, "0.00")
+            if key == "place_p": entry.insert(0, "0.00") 
             entry.grid(row=i, column=1, padx=5, pady=2)
             self.pitch_entries[key] = entry
 
