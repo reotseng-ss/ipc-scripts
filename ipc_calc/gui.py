@@ -53,7 +53,7 @@ class IPCHomeGUI:
             ], 
             width=30
         )
-        self.level.set("A (Maximum Protrusion)")
+        self.level.set("B (Median Protrusion")
         self.level.grid(row=1, column=1, padx=5, pady=5)
 
         # Dimensions Section

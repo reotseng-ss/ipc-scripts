@@ -16,9 +16,9 @@ class IPC7351Engine:
         # Fillet Tables (jt: Toe, jh: Heel, js: Side)
         self.fillet_tables = {
             "Gull-wing": {
-                "A": {"jt": 0.55, "jh": 0.45, "js": 0.01, "excess": 0.5},
-                "B": {"jt": 0.35, "jh": 0.35, "js": -0.02, "excess": 0.25},
-                "C": {"jt": 0.15, "jh": 0.25, "js": -0.04, "excess": 0.1}
+                "A": {"jt": 0.55, "jh": 0.45, "js": 0.05, "excess": 0.50},
+                "B": {"jt": 0.35, "jh": 0.35, "js": 0.03, "excess": 0.25},
+                "C": {"jt": 0.15, "jh": 0.25, "js": 0.00, "excess": 0.10}
             }
         }
 
